@@ -1,0 +1,19 @@
+#add-item-form {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+#inputField {
+    height: 20px;
+}
+#add-task-button {
+    display: flex;
+    justify-content: end;
+}
+.form-example {
+    margin: 15px;
+
+}
+body {
+    background-color: #b99bb9;
+}
