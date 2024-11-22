@@ -3,8 +3,37 @@
     width: 100%;
     justify-content: center;
 }
-#inputField {
+#name {
     height: 20px;
+}
+#description {
+    height: 100px;
+}
+#header-div {
+    background-color: #333; /* Dark background */
+    padding: 10px 20px;
+}
+.navbar {
+    list-style-type: none; /* Remove bullets */
+    display: flex;         /* Horizontal layout */
+    justify-content: space-around; /* Space between items */
+    align-items: center;
+    padding: 30px;
+}
+.header-item a {
+    color: white;           /* Text color */
+    text-decoration: none;  /* Remove underline */
+    padding: 10px 15px;
+    font-size: large;
+    transition: background-color 0.3s ease;
+    background-color: #575757; /* Slightly lighter background */
+}
+.header-item a:hover {
+    background-color: #6e6e6e; /* Slightly lighter background */
+    border-radius: 5px;        /* Rounded corners */
+}
+.header-item a:active {
+    background-color: #9e9e9e;;
 }
 #add-task-button {
     display: flex;
@@ -12,8 +41,19 @@
 }
 .form-example {
     margin: 15px;
-
 }
-body {
+@media (max-width: 600px) {
+    .navbar {
+        flex-direction: column; /* Stack items vertically */
+        text-align: center;
+    }
+
+    .header-item {
+        margin-bottom: 10px; /* Add spacing between items */
+    }
+}
+body, ul {
     background-color: #b99bb9;
+    margin: 0;
+    padding: 0;
 }
