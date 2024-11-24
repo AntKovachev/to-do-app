@@ -1,8 +1,18 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
 const app = express();
 const PORT = 3000;
+mongoose.connect('mongodb://localhost:27017/to_do_app');
+
+const TaskSchema = new mongoose.Schema({
+    name: String,
+    description: String,
+    created_at: String
+});
+
+const TaskModel = mongoose.model('tasks', TaskSchema);
 
 // Middleware to serve static files
 app.use(express.static(path.join(__dirname)));
@@ -15,24 +25,16 @@ app.get('/', (req, res) => {
 
 // API endpoint to fetch tasks
 app.get('/tasks', (req, res) => {
-    const dbPath = path.join(__dirname, 'db.json');
-    fs.readFile(dbPath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error reading db.json:', err);
-            return res.status(500).send('Internal Server Error');
-        }
-
-        try {
-            const tasks = JSON.parse(data || '[]');
-            res.json(tasks);
-        } catch (parseErr) {
-            console.error('Error parsing db.json:', parseErr);
+    TaskModel.find({})
+        .then(users => {
+            res.json(users);
+        })
+        .catch(err => {
+            console.error('Error fetching tasks:', err);
             res.status(500).send('Internal Server Error');
-        }
-    });
+        });
 });
 
-// Handle form submission to add a task
 app.post('/submit', (req, res) => {
     const { name, description } = req.body;
     const dbPath = path.join(__dirname, 'db.json');
@@ -53,7 +55,11 @@ app.post('/submit', (req, res) => {
             }
         }
 
+        // Generate a unique ID for the new task
+        const newId = tasks.length > 0 ? tasks[tasks.length - 1].id + 1 : 1;
+
         const newTask = {
+            id: newId, // Add the ID field
             created_at: new Date().toISOString(),
             name,
             description,
@@ -70,6 +76,7 @@ app.post('/submit', (req, res) => {
         });
     });
 });
+
 
 // Start the server
 app.listen(PORT, () => {
