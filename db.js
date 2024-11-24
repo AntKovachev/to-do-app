@@ -1,18 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const taskContainer = document.querySelector('main'); // Reference to main container
+    const taskContainer = document.querySelector('main');
 
-    // Create a parent wrapper for flexbox or grid layout
     const taskWrapper = document.createElement('div');
-    taskWrapper.className = 'd-flex flex-wrap gap-4'; // Flexbox wrapper with spacing
-
-    // Append the wrapper to the main container
+    taskWrapper.className = 'd-flex flex-wrap gap-4';
     taskContainer.appendChild(taskWrapper);
 
     // Fetch tasks from the server
     fetch('/tasks')
         .then((response) => response.json())
         .then((tasks) => {
-            tasks.reverse(); // Display tasks in descending order
+            tasks.reverse();
             tasks.forEach((task) => {
                 const taskElement = createTaskElement(task);
                 taskWrapper.appendChild(taskElement);
@@ -29,26 +26,21 @@ function createTaskElement(task) {
     const innerDiv = document.createElement('div');
     innerDiv.className = 'text-center position-relative';
 
-    // Add buttons container
     const buttonsContainer = document.createElement('div');
     buttonsContainer.className = 'position-relative top-0 end-0 m-2';
 
-    // Create "Edit" button
     const editButton = document.createElement('button');
     editButton.className = 'btn btn-sm btn-primary me-1';
     editButton.textContent = 'Edit';
 
-    // Create "Mark as Done" button
     const doneButton = document.createElement('button');
     doneButton.className = 'btn btn-sm btn-success me-1';
     doneButton.textContent = 'Mark as done';
 
-    // Create "Delete" button
     const deleteButton = document.createElement('button');
     deleteButton.className = 'btn btn-sm btn-danger';
     deleteButton.textContent = 'Delete';
 
-    // Append buttons to the container
     buttonsContainer.appendChild(editButton);
     buttonsContainer.appendChild(doneButton);
     buttonsContainer.appendChild(deleteButton);
@@ -61,10 +53,35 @@ function createTaskElement(task) {
     description.className = 'text-muted fs-6';
     description.textContent = task.description;
 
-    innerDiv.appendChild(buttonsContainer); // Add buttons to the top-right
+    innerDiv.appendChild(buttonsContainer);
     innerDiv.appendChild(title);
     innerDiv.appendChild(description);
     container.appendChild(innerDiv);
+
+    // Handle Edit functionality
+    editButton.addEventListener('click', () => {
+        const updatedName = prompt('Edit Task Name:', task.name);
+        const updatedDescription = prompt('Edit Task Description:', task.description);
+
+        if (updatedName && updatedDescription) {
+            fetch(`/update/${task._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: updatedName, description: updatedDescription }),
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        alert('Task updated successfully!');
+                        window.location.reload(); // Reload to show updated tasks
+                    } else {
+                        alert('Failed to update task.');
+                    }
+                })
+                .catch((error) => console.error('Error updating task:', error));
+        }
+    });
 
     return container;
 }
