@@ -32,7 +32,22 @@ app.get('/tasks', (req, res) => {
             res.status(500).send('Internal Server Error');
         });
 });
+app.delete('/delete/:id', async (req, res) => {
+    const { id } = req.params;
 
+    try {
+        const deletedTask = await TaskModel.findByIdAndDelete(id);
+
+        if (deletedTask) {
+            res.status(200).send('Task deleted successfully');
+        } else {
+            res.status(404).send('Task not found');
+        }
+    } catch (err) {
+        console.error('Error deleting task:', err);
+        res.status(500).send('Internal Server Error');
+    }
+});
 // Endpoint to update a task
 app.put('/update/:id', async (req, res) => {
     const { id } = req.params;

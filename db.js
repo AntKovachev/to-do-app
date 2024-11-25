@@ -70,16 +70,30 @@ function createTaskElement(task) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ name: updatedName, description: updatedDescription }),
+            }).then((response) => {
+                if (response.ok) {
+                    alert('Task updated successfully!');
+                    window.location.reload(); // Reload to show updated tasks
+                } else {
+                    alert('Failed to update task.');
+                }
+            }).catch((error) => console.error('Error updating task:', error));
+        }
+    });
+    deleteButton.addEventListener('click', () => {
+        if (confirm('Are you sure you want to delete this task?')) {
+            fetch(`/delete/${task._id}`, {
+                method: 'DELETE',
             })
                 .then((response) => {
                     if (response.ok) {
-                        alert('Task updated successfully!');
-                        window.location.reload(); // Reload to show updated tasks
+                        alert('Task deleted successfully!');
+                        window.location.reload(); // Reload to update the list
                     } else {
-                        alert('Failed to update task.');
+                        alert('Failed to delete task.');
                     }
                 })
-                .catch((error) => console.error('Error updating task:', error));
+                .catch((error) => console.error('Error deleting task:', error));
         }
     });
 
