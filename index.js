@@ -4,16 +4,9 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 const User = require('./models/User');
+const Task = require('./models/Task');
 
 mongoose.connect('mongodb://localhost:27017/to_do_app');
-
-const TaskSchema = new mongoose.Schema({
-    name: String,
-    description: String,
-    created_at: String,
-});
-
-const TaskModel = mongoose.model('tasks', TaskSchema);
 
 app.use(express.static(path.join(__dirname)));
 app.use(express.urlencoded({ extended: true }));
@@ -24,7 +17,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/tasks', (req, res) => {
-    TaskModel.find({})
+    Task.find({})
         .then((tasks) => {
             res.json(tasks);
         })
@@ -37,7 +30,7 @@ app.delete('/delete/:id', async (req, res) => {
     const { id } = req.params;
 
     try {
-        const deletedTask = await TaskModel.findByIdAndDelete(id);
+        const deletedTask = await Task.findByIdAndDelete(id);
 
         if (deletedTask) {
             res.status(200).send('Task deleted successfully');
@@ -55,7 +48,7 @@ app.put('/update/:id', async (req, res) => {
     const { name, description } = req.body;
 
     try {
-        const updatedTask = await TaskModel.findByIdAndUpdate(
+        const updatedTask = await Task.findByIdAndUpdate(
             id,
             { name, description },
             { new: true } // Return the updated document
@@ -82,7 +75,7 @@ app.post('/submit', async (req, res) => {
     };
 
     try {
-        await TaskModel.create(newTask);
+        await Task.create(newTask);
         console.log('New task created successfully');
         res.redirect('/');
     } catch (err) {
