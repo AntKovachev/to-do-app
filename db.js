@@ -1,3 +1,4 @@
+// THIS SCRIPT FILE IS FETCHING RECORDS FROM DB
 document.addEventListener('DOMContentLoaded', () => {
     const taskContainer = document.querySelector('main');
 
