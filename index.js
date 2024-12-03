@@ -14,10 +14,6 @@ app.use(express.json());
 app.use(taskRoutes);
 app.use(authRoutes);
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
